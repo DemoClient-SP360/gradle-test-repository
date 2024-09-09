@@ -55,18 +55,18 @@ public class ModuleOne {
     }
 
     // Build error: Method has invalid return type
-    public String invalidReturnTypeMethod() {
+    public int invalidReturnTypeMethod() {
         int number = 5; 
         return number; // Trying to return an int when the method should return a String
     }
 
     // Build error: Method signature is incorrect
-    public void incorrectMethodSignature String methodWithSyntaxError() { // Incorrect syntax for method declaration
+    public void methodWithSyntaxError() { // Incorrect syntax for method declaration
         System.out.println("This method has a syntax error");
     }
 
     // Build error: Undeclared variable
     public void undeclaredVariableError() {
-        System.out.println("The value of undeclaredVar is: " + undeclaredVar); // undeclaredVar is not defined
+        System.out.println("The value of undeclaredVar is: " + 1); // undeclaredVar is not defined
     }
 }
