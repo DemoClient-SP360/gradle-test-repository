@@ -61,7 +61,8 @@ public class ModuleOne {
     }
 
     // Build error: Method signature is incorrect
-    public void methodWithSyntaxError() { // Incorrect syntax for method declaration
+    public void methodWithSyntaxError() { 
+        // Incorrect syntax for method declaration
         System.out.println("This method has a syntax error");
     }
 
