@@ -1,12 +1,19 @@
-package main.java.gradle.project.fail;
+package gradle.project.fail;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ModuleOne {
     
     // BUG: Null pointer dereference vulnerability
     public void process(String input) {
-        if (input.length() > 5) { // This can lead to a NullPointerException if input is null
+        if (input != null && input.length() > 5) { // Sonar might flag this for handling null check after method call.
+            System.out.println("Input length is greater than 5");
+        }
+        input = null;
+        if (input.length() > 5) { // NullPointerException risk here
             System.out.println("Input length is greater than 5");
         }
     }
@@ -25,12 +32,17 @@ public class ModuleOne {
     // SECURITY VULNERABILITY: Hardcoded password
     public void connectToDatabase() {
         String password = "SuperSecretPassword123"; // Hardcoded password is a bad practice
-        System.out.println("Connecting to database with password: " + password);
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "user", password);
+            System.out.println("Connecting to database with password: " + password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-     // BUG: SQL Injection vulnerability
+    // SECURITY VULNERABILITY: SQL Injection vulnerability
     public void fetchUserData(String userInput) {
-        String query = "SELECT * FROM users WHERE name = '" + userInput + "'"; // Dangerous SQL query
+        String query = "SELECT * FROM users WHERE name = '" + userInput + "'"; // SQL Injection
         System.out.println("Executing query: " + query);
     }
 
@@ -48,26 +60,30 @@ public class ModuleOne {
         String unused = "This variable is never used"; // Unused variable
     }
 
-    // VULNERABILITY: Division by zero
+    // SECURITY VULNERABILITY: Division by zero
     public void divideByZero(int value) {
-        int result = 100 / value; // No check for division by zero
-        System.out.println("Result: " + result);
+        if (value != 0) {
+            int result = 100 / value; // Dividing by zero vulnerability
+            System.out.println("Result: " + result);
+        } else {
+            System.out.println("Cannot divide by zero");
+        }
     }
 
-    // Build error: Method has invalid return type
-    public int invalidReturnTypeMethod() {
+    // BUG: Invalid return type (should return String but returns int)
+    public String invalidReturnTypeMethod() {  // Method signature mismatch
         int number = 5; 
-        return number; // Trying to return an int when the method should return a String
+        return Integer.toString(number); // Returning the correct type now, but Sonar can flag the original mismatch
     }
 
     // Build error: Method signature is incorrect
     public void methodWithSyntaxError() { 
-        // Incorrect syntax for method declaration
         System.out.println("This method has a syntax error");
     }
 
-    // Build error: Undeclared variable
+    // BUG: Undeclared variable
     public void undeclaredVariableError() {
-        System.out.println("The value of undeclaredVar is: " + 1); // undeclaredVar is not defined
+        int undeclaredVar = 1;  // Declare the variable properly
+        System.out.println("The value of undeclaredVar is: " + undeclaredVar);
     }
 }
