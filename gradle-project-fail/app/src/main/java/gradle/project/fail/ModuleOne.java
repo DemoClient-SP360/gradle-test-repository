@@ -9,11 +9,13 @@ public class ModuleOne {
     
     // BUG: Null pointer dereference vulnerability
     public void process(String input) {
-        if (input != null && input.length() > 5) { // Sonar might flag this for handling null check after method call.
+        if (input != null && input.length() > 5) { 
+            // Sonar might flag this for handling null check after method call.
             System.out.println("Input length is greater than 5");
         }
         input = null;
-        if (input.length() > 5) { // NullPointerException risk here
+        if (input.length() > 5) { 
+            // NullPointerException risk here
             System.out.println("Input length is greater than 5");
         }
     }
@@ -71,7 +73,8 @@ public class ModuleOne {
     }
 
     // BUG: Invalid return type (should return String but returns int)
-    public String invalidReturnTypeMethod() {  // Method signature mismatch
+    public String invalidReturnTypeMethod() {  
+        // Method signature mismatch
         int number = 5; 
         return Integer.toString(number); // Returning the correct type now, but Sonar can flag the original mismatch
     }
